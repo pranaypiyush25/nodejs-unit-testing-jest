@@ -23,11 +23,11 @@ pipeline {
                 echo 'Running Unit Test'
                 sh 'npm run test'
             }
-        }
-        stage('Code Coverage') {
-            steps{
-                echo 'Code Coverage'
-                sh 'npm run test --coverage'
+            
+            post {
+                always {
+                  junit 'output/coverage/junit/junit.xml'
+                }
             }
         }
     }
