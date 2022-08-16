@@ -4,20 +4,28 @@ pipeline {
         nodejs 'nodejs'
     }
     stages {
-        stage('git') {
+        stage('Cloning Repository from Git') {
             steps {
                 echo 'Pulling Code from Github'
                 git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
                 }
             }
-        stage('Unit Test') {
+        stage('Installing Nodejs') {
             steps{
-                echo 'Unit Test'
+                echo 'Installing Nodejs'
+                sh 'npm install'
+            }
+        }
+        stage('Running Unit Test') {
+            steps{
+                echo 'Running Unit Test'
+                sh 'npm run test'
             }
         }
         stage('Code Coverage') {
             steps{
                 echo 'Code Coverage'
+                sh 'npm run test --coverage'
             }
         }
     }
