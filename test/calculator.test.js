@@ -1,4 +1,4 @@
-const { add, subtract, multiply } = require('../calculator');
+const { add, subtract, multiply } = require('../src/calculator');
 
 test('Adding two numbers', async () => {
     expect(add(5, 5)).toStrictEqual(10)
