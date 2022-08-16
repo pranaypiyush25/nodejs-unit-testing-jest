@@ -18,13 +18,6 @@ pipeline {
             }
         }
         
-        stage('Starting Server') {
-            steps{
-                echo 'Starting the Test Server'
-                sh 'npm start server.js'
-            }
-        }
-        
         stage('Running Unit Test') {
             steps{
                 echo 'Running Unit Test'
