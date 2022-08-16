@@ -7,7 +7,7 @@ pipeline {
         stage('git') {
             steps {
                 echo 'Pulling Code from Github'
-                git branch: 'main', url: 'https://github.com/pranaypiyush25/nodeweb'
+                git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
                 }
             }
         stage('Unit Test') {
