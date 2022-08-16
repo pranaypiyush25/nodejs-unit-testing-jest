@@ -10,12 +10,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
                 }
             }
+        
         stage('Installing Nodejs') {
             steps{
                 echo 'Installing Nodejs'
                 sh 'npm install'
             }
         }
+        
+        stage('Starting Server') {
+            steps{
+                echo 'Starting the Test Server'
+                sh 'npm start server.js'
+            }
+        }
+        
         stage('Running Unit Test') {
             steps{
                 echo 'Running Unit Test'
