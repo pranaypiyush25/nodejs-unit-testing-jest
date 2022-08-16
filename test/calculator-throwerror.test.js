@@ -6,9 +6,9 @@ test('Addition: Throw Error when inputs are not numbers', async () => {
     )
 })
 
-// test('Additing two numbers', async () => {
-//     expect(add(5, 5)).toStrictEqual(10)
-// })
+test('Additing two numbers', async () => {
+    expect(add(5, 5)).toStrictEqual(10)
+})
 
 
 test('Subtraction: Throw Error when inputs are not numbers', async () => {
@@ -17,9 +17,9 @@ test('Subtraction: Throw Error when inputs are not numbers', async () => {
     )
 })
 
-// test('Subtracting two numbers', async () => {
-//     expect(subtract(5, 5)).toStrictEqual(0)
-// })
+test('Subtracting two numbers', async () => {
+    expect(subtract(5, 5)).toStrictEqual(0)
+})
 
 test('Multiplication: Throw Error when inputs are not numbers', async () => {
     expect(() => multiply('5', 5)).toThrowError(
