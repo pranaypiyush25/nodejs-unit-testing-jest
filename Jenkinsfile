@@ -44,7 +44,8 @@ pipeline {
             steps {
                 echo 'Static Code Analysis in SonarCube'
                 withSonarQubeEnv('SonarQube') {
-                    sh "./gradlew sonarqube"
+                    sh "npm install sonar-scanner"
+                    sh "npm run sonar"
                 }
             }
         }
