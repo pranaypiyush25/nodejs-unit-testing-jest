@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage"
-    "sonar": ""
+    "coverage": "jest --coverage",
+    "sonar": "sonar-scanner"
   },
   "repository": {
     "type": "git",
