@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage"
+    "sonar": ""
   },
   "repository": {
     "type": "git",

@@ -21,64 +21,37 @@ pipeline {
         }
 
         stage('Bug Cap Using Jira'){
-            steps{
+            steps {
                 echo 'Bug Cap Using Jira'
             }
         }
         
         stage('Installing Nodejs') {
-            steps{
+            steps {
                 echo 'Installing Nodejs'
                 sh 'npm install'
             }
         }
         
         stage('Running Unit Test') {
-            steps{
+            steps {
                 echo 'Running Unit Test'
                 sh 'npm run test'
             }
         }
 
-        stage('Static Code Analysis TPL Scan') {
-            steps{
-                echo 'Static Code Analysis TPL Scan in SonarCube'
-            }
-        }
-
-        stage('Logging into AWS ECR') {
+        stage('SonarQube analysis') {
             steps {
-                script {
-                    sh "aws ecr get-login-password — region ${AWS_DEFAULT_REGION} | docker login — username AWS — password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                echo 'Static Code Analysis in SonarCube'
+                withSonarQubeEnv('SonarQube') {
+                    sh "./gradlew sonarqube"
                 }
             }
         }
-
-        stage('Building Docker Image') {
-            steps{
-                script {
-                    dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
-                }
+        stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
             }
         }
-
-        stage('Container Vulnerability Scan') {
-            steps{
-                echo 'Container Vulnerability Scan'
-                script {
-                    echo 'Hello Everyone'
-                }
-            }
-        }
-
-        stage('Pushing to ECR') {
-            steps{
-                script {
-                    sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
-                }
-            }
-        }
-
     }
 }
