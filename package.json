@@ -16,9 +16,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bbachi/nodejs-unit-testing-jest/issues"
+    "url": "https://github.com/pranaypiyush25/nodejs-unit-testing-jest/issues"
   },
-  "homepage": "https://github.com/bbachi/nodejs-unit-testing-jest#readme",
+  "homepage": "https://github.com/pranaypiyush25/nodejs-unit-testing-jest#readme",
   "dependencies": {
     "express": "^4.17.1",
     "jest": "^26.6.3",
