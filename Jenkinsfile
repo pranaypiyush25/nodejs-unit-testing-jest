@@ -119,19 +119,15 @@ node(POD_LABEL) {
             }
 
             stage('Installing Nodejs') {
-                steps {
-                    echo 'Installing Nodejs'
-                    sh 'npm install'
-                }
+                echo 'Installing Nodejs'
+                sh 'npm install'
             }
 
             stage('SonarQube analysis') {
-                steps {
-                    echo 'Static Code Analysis in SonarCube'
-                    withSonarQubeEnv('SonarQube') {
-                        sh "npm install sonar-scanner"
-                        sh "npm run sonar"
-                    }
+                echo 'Static Code Analysis in SonarCube'
+                withSonarQubeEnv('SonarQube') {
+                    sh "npm install sonar-scanner"
+                    sh "npm run sonar"
                 }
             }
 
