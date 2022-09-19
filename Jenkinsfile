@@ -129,6 +129,7 @@ node(POD_LABEL) {
                 container('node') {
                     echo 'Static Code Analysis in SonarCube'
                     withSonarQubeEnv('sonarqube-ec2') {
+                        sh "npm install sonar-scanner"
                         sh "npm run sonar"
                     }
                 }
