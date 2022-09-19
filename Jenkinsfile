@@ -1,58 +1,146 @@
-pipeline {
-    agent any
-
-    environment {
-        AWS_ACCOUNT_ID = "052612660561"
-        AWS_DEFAULT_REGION = "us-east-1"
-        IMAGE_REPO_NAME = "jenkins-pipeline"
-        IMAGE_TAG = "latest"
-        REPOSITORY_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-    }
-
-    tools {
-        nodejs 'nodejs'
-    }
-    stages {
-        stage('Cloning Repository from Git') {
-            steps {
-                echo 'Pulling Code from Github'
-                git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
-            }
-        }
-
-        stage('Bug Cap Using Jira'){
-            steps {
-                echo 'Bug Cap Using Jira'
-            }
-        }
-        
-        stage('Installing Nodejs') {
-            steps {
-                echo 'Installing Nodejs'
-                sh 'npm install'
-            }
-        }
-        
-        stage('Running Unit Test') {
-            steps {
-                echo 'Running Unit Test'
-                sh 'npm run test'
-            }
-        }
-
-        stage('SonarQube analysis') {
-            steps {
-                echo 'Static Code Analysis in SonarCube'
-                withSonarQubeEnv('SonarQube') {
-                    sh "npm install sonar-scanner"
-                    sh "npm run sonar"
+podTemplate(yaml: '''
+  apiVersion: v1
+  kind: Pod
+  spec:
+    containers:
+    - name: node
+      image: 341118756977.dkr.ecr.ap-south-1.amazonaws.com/node-alpine:14.18.1 
+      imagePullPolicy: Always
+      command:
+      - sleep
+      args:
+      - 99d
+      env:
+      - name: GIT_PAT
+        valueFrom:
+          secretKeyRef:
+            name: jenkins-agent-secret
+            key: GIT_PAT_READ
+      - name: GIT_PACKAGES_PAT_PUBLISH
+        valueFrom:
+          secretKeyRef:
+            name: jenkins-agent-secret
+            key: GIT_PACKAGES_PAT_PUBLISH
+    - name: common
+      image: 341118756977.dkr.ecr.ap-south-1.amazonaws.com/common-alpine:3.16
+      imagePullPolicy: Always
+      command:
+      - sleep
+      args:
+      - 99d
+      env:
+      - name: GIT_PAT
+        valueFrom:
+          secretKeyRef:
+            name: jenkins-agent-secret
+            key: GIT_PAT_READ
+      - name: GIT_PAT_WRITE
+        valueFrom:
+          secretKeyRef:
+            name: jenkins-agent-secret
+            key: GIT_PAT_WRITE
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: aws-secrets
+            key: accessKeyId
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: aws-secrets
+            key: secretAccessKey
+    - name: make
+      image: abhi96/alpine:3.16
+      imagePullPolicy: Always
+      command:
+      - sleep
+      args:
+      - 99d
+    - name: aws-cli
+      image: amazon/aws-cli:2.7.27
+      command:
+      - sleep
+      args:
+      - 99d
+      env:
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: aws-secrets
+            key: accessKeyId
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: aws-secrets
+            key: secretAccessKey
+    - name: docker
+      image: docker:latest
+      command:
+        - /bin/cat
+      tty: true
+      volumeMounts:
+        - name: dind-certs
+          mountPath: /certs
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: /certs
+        - name: DOCKER_CERT_PATH
+          value: /certs
+        - name: DOCKER_TLS_VERIFY
+          value: 1
+        - name: DOCKER_HOST
+          value: tcp://localhost:2376
+    - name: dind
+      image: docker:dind
+      securityContext:
+        privileged: true
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: /certs
+      volumeMounts:
+        - name: dind-storage
+          mountPath: /var/lib/docker
+        - name: dind-certs
+          mountPath: /certs/client
+    volumes:
+    - name: dind-storage
+      emptyDir: {}
+    - name: dind-certs
+      emptyDir: {}
+    
+''') {
+def sendEmail
+node(POD_LABEL) {
+    try {
+            stage('Cloning Git Repo') {
+                container('common'){
+                    git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
                 }
             }
-        }
-        stage("Quality gate") {
-            steps {
-                waitForQualityGate abortPipeline: true
+
+            stage('Installing Nodejs') {
+                steps {
+                    echo 'Installing Nodejs'
+                    sh 'npm install'
+                }
+            }
+
+            stage('SonarQube analysis') {
+                steps {
+                    echo 'Static Code Analysis in SonarCube'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "npm install sonar-scanner"
+                        sh "npm run sonar"
+                    }
+                }
+            }
+
+            stage("Quality gate") {
+                steps {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
 }
+
