@@ -140,6 +140,8 @@ node(POD_LABEL) {
                     waitForQualityGate abortPipeline: true
                 }
             }
+        } catch(e) {
+            throw e
         }
     }
 }
