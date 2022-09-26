@@ -128,8 +128,9 @@ node(POD_LABEL) {
             }
 
             stage("Quality gate") {
-                steps {
+                  container('common'){
                     waitForQualityGate abortPipeline: true
+                  }
                 }
             }
         } catch(e) {
