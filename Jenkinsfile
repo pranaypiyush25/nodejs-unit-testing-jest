@@ -116,14 +116,7 @@ node(POD_LABEL) {
                     git branch: 'main', url: 'https://github.com/pranaypiyush25/nodejs-unit-testing-jest'
                 }
             }
-
-            stage('Installing Nodejs') {
-                container('node') {
-                    echo 'Installing Nodejs'
-                    sh 'npm install'
-                }
-            }
-
+            
             stage('SonarQube analysis') {
                 container('node') {
                     echo 'Static Code Analysis in SonarQube'
