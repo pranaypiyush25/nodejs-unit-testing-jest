@@ -4,7 +4,7 @@ podTemplate(yaml: '''
   spec:
     containers:
     - name: node
-      image: 341118756977.dkr.ecr.ap-south-1.amazonaws.com/node-alpine:14.18.1 
+      image: 341118756977.dkr.ecr.ap-south-1.amazonaws.com/node-alpine:14.18.1-8.6.0-v22
       imagePullPolicy: Always
       command:
       - sleep
