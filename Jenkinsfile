@@ -109,7 +109,6 @@ podTemplate(yaml: '''
       emptyDir: {}
     
 ''') {
-def sendEmail
 node(POD_LABEL) {
     try {
             stage('Cloning Git Repo') {
@@ -127,10 +126,10 @@ node(POD_LABEL) {
 
             stage('SonarQube analysis') {
                 container('node') {
-                    echo 'Static Code Analysis in SonarCube'
+                    echo 'Static Code Analysis in SonarQube'
+                    def scannerHome = tool 'sonarqube-scanner'
                     withSonarQubeEnv('sonarqube-ec2') {
-                        sh 'npm install -g sonarqube-scanner'
-                        sh 'sonar-scanner'
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
