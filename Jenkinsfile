@@ -138,8 +138,8 @@ node(POD_LABEL) {
                     sonar.projectName="${SERVICE_NAME}"
                     sonar.projectVersion=1.0
                     
-                    sonar.sources=./integrator-adaptor-util/src
-                    sonar.javascript.lcov.reportPaths=./integrator-adaptor-util/coverage/lcov.info
+                    sonar.sources=./src
+                    sonar.javascript.lcov.reportPaths=./coverage/lcov.info
 
                     sonar.sourceEncoding=UTF-8
                     EOF
