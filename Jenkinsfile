@@ -134,8 +134,8 @@ node(POD_LABEL) {
                   sh"""
                     #!/bin/bash
                     cat <<EOF > sonar-project.properties
-                    sonar.projectKey="${SERVICE_KEY}"
-                    sonar.projectName="${SERVICE_NAME}"
+                    sonar.projectKey=${SERVICE_KEY}
+                    sonar.projectName=${SERVICE_NAME}
                     sonar.projectVersion=1.0
                     
                     sonar.sources=./src
