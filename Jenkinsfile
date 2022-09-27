@@ -109,6 +109,8 @@ podTemplate(yaml: '''
       emptyDir: {}
     
 ''') {
+  env.SERVICE_NAME = 'nodejs-unit-testing-jest'
+  env.SERVIVE_KEY = 'nodejs-unit-testing-jest'
 node(POD_LABEL) {
     try {
             stage('Cloning Git Repo') {
@@ -127,6 +129,23 @@ node(POD_LABEL) {
             }
             
             stage('SonarQube analysis') {
+
+                container('common'){
+                  sh"""
+                    #!/bin/bash
+                    cat <<EOF > sonar-project.properties
+                    sonar.projectKey=$SERVICE_KEY
+                    sonar.projectName=$SERVICE_NAME
+                    sonar.projectVersion=1.0
+                    
+                    sonar.sources=./integrator-adaptor-util/src
+                    sonar.javascript.lcov.reportPaths=./integrator-adaptor-util/coverage/lcov.info
+
+                    sonar.sourceEncoding=UTF-8
+                    EOF
+                  """
+                }
+
                 container('node') {
                     echo 'Static Code Analysis in SonarQube'
                     def scannerHome = tool 'sonarqube-scanner'
