@@ -111,7 +111,7 @@ podTemplate(yaml: '''
 ''') {
 node(POD_LABEL) {
   env.SERVICE_NAME = 'nodejs-unit-testing-jest'
-  env.SERVIVE_KEY = 'nodejs-unit-testing-jest'
+  env.SERVICE_KEY = 'nodejs-unit-testing-jest'
     try {
             stage('Cloning Git Repo') {
                 container('common'){
@@ -134,8 +134,8 @@ node(POD_LABEL) {
                   sh"""
                     #!/bin/bash
                     cat <<EOF > sonar-project.properties
-                    sonar.projectKey=${SERVICE_KEY}
-                    sonar.projectName=${SERVICE_NAME}
+                    sonar.projectKey="${SERVICE_KEY}"
+                    sonar.projectName="${SERVICE_NAME}"
                     sonar.projectVersion=1.0
                     
                     sonar.sources=./integrator-adaptor-util/src
