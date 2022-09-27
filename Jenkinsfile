@@ -109,9 +109,9 @@ podTemplate(yaml: '''
       emptyDir: {}
     
 ''') {
+node(POD_LABEL) {
   env.SERVICE_NAME = 'nodejs-unit-testing-jest'
   env.SERVIVE_KEY = 'nodejs-unit-testing-jest'
-node(POD_LABEL) {
     try {
             stage('Cloning Git Repo') {
                 container('common'){
