@@ -140,7 +140,7 @@ node(POD_LABEL) {
                     
                     sonar.sources=./src
                     sonar.javascript.lcov.reportPaths=./coverage/lcov.info
-
+                    sonar.issues.defaultAssigneeLogin = pranay.piyush25
                     sonar.scm.provider=git
 
                     sonar.sourceEncoding=UTF-8
